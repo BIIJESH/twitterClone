@@ -21,8 +21,11 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "Email is already taken" });
     }
 
-    if (password.length < 8) {
-      return res.status(400).json({ error: "Password must be at least 6 characters long" });
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/
+
+    if (password.length < 8 || !passwordRegex.test(password)) {
+      //TODO:strong password validation
+      return res.status(400).json({ error: "Password must be at least 6 characters long and must contain special characters" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -59,13 +62,13 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  // const user = await User.findOne({ email: req.body.email })
-  // if (!user) {
-  // }
-  //
-  res.json({ data: "This is the login endpoint" })
-}
+  try {
+    const { username, password } = req.body;
+    res.json({ data: "This is the login endpoint" })
+  } catch (error) {
 
+  }
+}
 export const logout = async (req, res) => {
   res.json({ data: "This is the logout endpoint" })
 }
