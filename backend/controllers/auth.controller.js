@@ -24,7 +24,6 @@ export const signup = async (req, res) => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/
 
     if (password.length < 8 || !passwordRegex.test(password)) {
-      //TODO:strong password validation
       return res.status(400).json({ error: "Password must be at least 6 characters long and must contain special characters" });
     }
 
@@ -64,11 +63,28 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    res.json({ data: "This is the login endpoint" })
+    const user = await User.findOne({ username })
+    const isValidPassword = await bcrypt.compare(password, user?.password || "")
+    if (!user || !isValidPassword) {
+      res.status(400).json({ error: "Invalid username or password" })
+    }
+    generateTokenAndSetCookie(user._id, res)
+    res.status(201).json({
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      email: user.email,
+      followers: user.followers,
+      following: user.following,
+      profileImg: user.profileImg,
+      coverImg: user.coverImg,
+    });
   } catch (error) {
-
+    console.log("Error in login controller", error.message)
+    res.status(500).json({ error: "Internal Server Error" })
   }
 }
+
 export const logout = async (req, res) => {
   res.json({ data: "This is the logout endpoint" })
 }
