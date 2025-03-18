@@ -24,4 +24,6 @@ const Notification = mongoose.model('Notification', notificationsSchema)
 
 export default Notification
 
+
 //TODO:add comment notification
+//TODO:implement forgot password if not implemented

@@ -1,3 +1,5 @@
+import { v2 as cloudinary } from "cloudinary"
+
 import User from "../models/user.model.js"
 import Notification from "../models/notification.model.js"
 
@@ -56,7 +58,7 @@ export const getSuggestedUsers = async (req, res) => {
     const users = await User.aggregate([
       {
         $match: {
-          _id: { $ne: userId } //don't get the authenticates user but get 10 different user using sample and size
+          _id: { $ne: userId } //don't get the authenticated user but get 10 different user using sample and size
         }
       },
       { $sample: { size: 10 } },
@@ -74,4 +76,41 @@ export const getSuggestedUsers = async (req, res) => {
 
   }
 }
-//TODO:implement forgot password if not implemented
+
+export const updateUser = async (req, res) => {
+  const { fullName, email, username, currentPassword, newPassword, bio, link } = req.body
+  let { profileImg, coverImg } = req.body
+  const userId = req.user._id
+
+  try {
+    const user = await User.findById(userId)
+    if (!user) return res.status(404).json({ error: "User not found" })
+    if ((!newPassword && currentPassword) || (!currentPassword && newPassword)) {
+      return res.status(400).json({ error: "Please provide both current password and new password" })
+    }
+    if (currentPassword && newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, user.password)
+      if (!isMatch) return res.status(400).json({ erorr: "current Password is incorrect" })
+      if (newPassword.length < 6) {
+        return res.status(400).json({ error: "Password must be atleast 6 characters long" })
+      }
+      const salt = bcrypt.genSalt(10)
+      user.password = await bcrypt.hash(newPassword, salt)
+    }
+    if (profileImg) {
+      const uploadedResponse = await cloudinary.uploader.upload(profileImg)
+      profileImg = uploadedResponse.secure_url
+    }
+    if (coverImg) {
+
+    }
+
+
+
+  } catch (error) {
+
+  }
+
+}
+
+
