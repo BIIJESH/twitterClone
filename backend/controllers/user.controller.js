@@ -12,6 +12,7 @@ export const getUserProfile = async (req, res) => {
     res.status(500).json({ erorr: error.message })
   }
 }
+
 export const followUnfollowUser = async (req, res) => {
   try {
     const { id } = req.params
@@ -46,21 +47,31 @@ export const followUnfollowUser = async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 }
+
 export const getSuggestedUsers = async (req, res) => {
   try {
     const userId = req.user._id
     const userFollowedByMe = await User.findById(userId).select("following")
+    //NOTE: mongodb aggregation-pipeline manual https://www.mongodb.com/docs/manual/core/aggregation-pipeline/
     const users = await User.aggregate([
       {
         $match: {
-          _id: { $ne: userId }
+          _id: { $ne: userId } //don't get the authenticates user but get 10 different user using sample and size
         }
       },
-      { $sample: { size=10 } },
+      { $sample: { size: 10 } },
+      { $project: { password: 0 } }// alternative to relative line 5  user.password =null
     ])
+    const filteredUsers = users.filter(user => !userFollowedByMe.following.includes(user._id))
+    const suggestedUsers = filteredUsers.slice(0, 4)
+
+    // suggestedUsers.forEach(user => user.password = null)
+    res.status(200).json(suggestedUsers)
 
   } catch (error) {
+    console.log("Error in getSuggestedUsers: ", error.message)
+    res.status(500).json({ error: error.message })
 
   }
-
 }
+//TODO:implement forgot password if not implemented
