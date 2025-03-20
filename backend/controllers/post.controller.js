@@ -1,22 +1,28 @@
 import User from "../models/user.model.js"
+import Notification from "../models/notification.model.js"
 import Post from "../models/post.model.js"
 import { v2 as cloudinary } from "cloudinary"
 
 
 export const createPost = async (req, res) => {
   try {
-    const { text } = req.body
-
-    let { img } = req.body
+    const { text, img } = req.body
     const userId = req.user._id.toString()
+
     const user = await User.findById(userId)
     if (!user) return res.status(404).json({ message: "User not found" })
     if (!text && !img) { //checking that both are falsy
       return res.status(400).json({ error: "Post must have image or text" })
     }
+    let imgUrl = img
     if (img) {
-      const uploadResponse = await cloudinary.uploader.upload(img)
-      img = uploadResponse.secure_url
+      try {
+        const uploadResponse = await cloudinary.uploader.upload(img)
+        imgUrl = uploadResponse.secure_url
+      } catch (uploadError) {
+        console.error("Error uploading image to cloudinary", uploadError)
+        return res.status(500).json({ error: "Image upload failed" })
+      }
     }
     const newPost = new Post({
       user: userId,
@@ -50,3 +56,52 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" })
   }
 }
+export const commentOnPost = async (req, res) => {
+  try {
+    const { text } = req.body
+    const postId = req.params.id
+    const userId = req.user._id
+    if (!text) {
+      console.log("Can't comment on the post ")
+      res.status(400).json({ error: "Text field is empty" })
+    }
+    const post = await Post.findById(postId)
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" })
+    }
+    const comment = { user: userId, text }
+    const newNotification = new Notification({
+      type: "comment",
+      from: userId, //user who commented
+      to: post.user //user who created the post
+    })
+    await newNotification.save()
+    post.comments.push(comment);
+    await post.save()
+    res.status(200).json(post)
+  } catch (commentError) {
+    console.log("Error in commentOnPost controller", commentError)
+    res.status(500).json({ error: "Internal server error" })
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
