@@ -13,7 +13,7 @@ const notificationsSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['follow', 'like', 'comment','unfollow']//add comment in here
+    enum: ['follow', 'like', 'comment', 'unfollow','post']
   },
   read: {
     type: Boolean,
@@ -28,3 +28,5 @@ export default Notification
 //TODO:add comment notification
 //TODO:implement forgot password if not implemented
 //TODO:implement delete comment if not implemented
+//TODO:implement following and followers route  private account and more
+

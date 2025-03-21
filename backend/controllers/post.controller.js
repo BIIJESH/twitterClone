@@ -11,6 +11,17 @@ export const createPost = async (req, res) => {
 
     const user = await User.findById(userId)
     if (!user) return res.status(404).json({ message: "User not found" })
+
+    if (user.followers && user.followers.length > 0) {
+      for (const followerId of user.followers) {
+        const newNotification = new Notification({
+          type: "post",
+          from: userId,
+          to: followerId
+        })
+        await newNotification.save()
+      }
+    }
     if (!text && !img) { //checking that both are falsy
       return res.status(400).json({ error: "Post must have image or text" })
     }
