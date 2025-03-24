@@ -43,7 +43,14 @@ const userSchema = new mongoose.Schema({
   link: {
     type: String,
     default: ""
-  }
+  },
+  likedPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+      default: [],
+    }
+  ]
 }, { timestamps: true })//timestamps is for getting member since account created date and more
 
 const User = mongoose.model("User", userSchema) //users

@@ -95,7 +95,7 @@ export const updateUser = async (req, res) => {
       return res.status(400).json({ error: "Please provide both current password and new password" })
     }
     if (currentPassword && newPassword) {
-      const isMatch = await bcrypt.compare(currentPassword, user.password)
+      const isMatch = bcrypt.compare(currentPassword, user.password)
       if (!isMatch) return res.status(400).json({ erorr: "current Password is incorrect" })
       if (newPassword.length < 6) {
         return res.status(400).json({ error: "Password must be atleast 6 characters long" })
