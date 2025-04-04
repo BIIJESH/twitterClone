@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+
 const notificationsSchema = new mongoose.Schema({
   from: {
     type: mongoose.Schema.Types.ObjectId,

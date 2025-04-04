@@ -203,27 +203,5 @@ export const getFollowingPost = async (req, res) => {
   } catch (error) {
     console.log("Error in getFollwingPost", error)
     res.status(500).json({ erorr: "Internal server error" })
-
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
