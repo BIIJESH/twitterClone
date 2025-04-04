@@ -2,6 +2,7 @@ import User from "../models/user.model.js"
 import Notification from "../models/notification.model.js"
 import Post from "../models/post.model.js"
 import { v2 as cloudinary } from "cloudinary"
+import { error } from "node:console"
 
 
 export const createPost = async (req, res) => {
@@ -203,5 +204,25 @@ export const getFollowingPost = async (req, res) => {
   } catch (error) {
     console.log("Error in getFollwingPost", error)
     res.status(500).json({ erorr: "Internal server error" })
+  }
+}
+export const getUserPosts = async (req, res) => {
+  try {
+    const { username } = req.params
+    const user = await User.findOne({ username })
+    if (!user) return res.status(404).json({ error: "User not found" })
+    const posts = await Post.find({ user: user._id }).sort({ createdAt: -1 })
+      .populate({
+        path: "user",
+        select: "password"
+      })
+      .populate({
+        path: "comments.user",
+        select: "-password"
+      })
+    res.status(200).json(posts)
+  } catch (error) {
+    console.log("Error in getUserPost", error)
+    res.status(500).json({ error: "Internal Server Error" })
   }
 }
