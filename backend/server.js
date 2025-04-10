@@ -3,9 +3,9 @@ import express from "express"
 import { v2 as cloudinary } from "cloudinary"
 
 //models
-import authRoutes from "./routes/auth.routes.js"
-import postRoutes from "./routes/post.routes.js"
-import userRoutes from "./routes/user.routes.js"
+import authRoutes from "./routes/auth.route.js"
+import postRoutes from "./routes/post.route.js"
+import userRoutes from "./routes/user.route.js"
 import connectMongoDB from "./db/connectDb.js"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
