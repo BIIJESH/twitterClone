@@ -84,11 +84,13 @@ const ProfilePage = () => {
                 <input
                   type='file'
                   hidden
+                  accept="image/*"
                   ref={coverImgRef}
                   onChange={(e) => handleImgChange(e, "coverImg")}
                 />
                 <input
                   type='file'
+                  accept="image/*"
                   hidden
                   ref={profileImgRef}
                   onChange={(e) => handleImgChange(e, "profileImg")}
@@ -146,7 +148,7 @@ const ProfilePage = () => {
                           rel='noreferrer'
                           className='text-sm text-blue-500 hover:underline'
                         >
-                          github.com/BIIJESH
+                          github.com/BIIJESH/
                         </a>
                       </>
                     </div>
