@@ -1,4 +1,5 @@
 import daisyui from "daisyui";
+import daisyUIThemes from "daisyui/theme";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -10,18 +11,13 @@ export default {
 
   daisyui: {
     themes: [
-      "light",
+      "dark", // Keep light theme if you want it as an option
       {
         black: {
+          ...daisyUIThemes["black"],
           primary: "rgb(29, 155, 240)",
           secondary: "rgb(24, 24, 24)",
-          accent: "#1fb2a6",
-          neutral: "#191D24",
-          "base-100": "#000000",
-          info: "#3ABFF8",
-          success: "#36D399",
-          warning: "#FBBD23",
-          error: "#F87272",
+          //3 13 12
         },
       },
     ],
