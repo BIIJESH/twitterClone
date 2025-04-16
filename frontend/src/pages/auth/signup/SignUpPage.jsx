@@ -8,6 +8,7 @@ import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -27,16 +28,17 @@ const SignUpPage = () => {
           },
           body: JSON.stringify({ email, username, fullName, password })
         })
-        if (!res.ok) throw new Error("Something went wrong")
+        if (!res.ok) throw new Error(data.error || "Failed to create Account")
         const data = await res.json()
-        if (data.error) throw new Error(data.error)
         console.log(data)
         return data
       } catch (error) {
         console.log(error)
-        toast.error(error.message)
+        throw error
       }
-
+    },
+    onSuccess: () => {
+      toast.success("Account Created successfully")
     }
   })//use for data manuplulation
 
