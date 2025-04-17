@@ -19,7 +19,7 @@ const SignUpPage = () => {
   });
 
   const { mutate, isError, isPending, error } = useMutation({
-    mutationFn: async (username, email, fullName, password) => {
+    mutationFn: async ({ username, email, fullName, password }) => {
       try {
         const res = await fetch("/api/auth/signup", {
           method: "POST",
@@ -28,8 +28,8 @@ const SignUpPage = () => {
           },
           body: JSON.stringify({ email, username, fullName, password })
         })
-        if (!res.ok) throw new Error(data.error || "Failed to create Account")
         const data = await res.json()
+        if (!res.ok) throw new Error(data.error || "Failed to create Account")
         console.log(data)
         return data
       } catch (error) {
