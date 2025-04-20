@@ -28,7 +28,8 @@ function App() {
         console.log(error)
         throw Error
       }
-    }
+    },
+    retry: 1
   })
   if (isLoading) {
     return (
