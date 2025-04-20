@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/auth/login/LoginPage";
 import SignUpPage from "./pages/auth/signup/SignUpPage";
 import HomePage from "./pages/home/HomePage";
@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./components/common/LoadingSpinner";
 
 function App() {
-  const { data, isLoading } = useQuery({
+  const { data: authUser, isLoading } = useQuery({
     queryKey: ['authUser'],
     queryFn: async () => {
       try {
@@ -22,6 +22,8 @@ function App() {
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong")
         }
+        console.log("Auth user is here", data)
+        return data
       } catch (error) {
         console.log(error)
         throw Error
@@ -40,16 +42,16 @@ function App() {
       {/* this is a common component becaues this is out side of the routes */}
       <Sidebar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
+        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route
           path="/notifications"
-          element={<NotificationPage />}
+          element={authUser ? <NotificationPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/profile/:username"
-          element={<ProfilePage />}
+          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
         />
       </Routes>
       <RightPanel />
