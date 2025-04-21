@@ -80,21 +80,20 @@ const Post = ({ post }) => {
                         No comments yet 🤔 Be the first one 😉
                       </p>
                     )}
-                    {post.comments.map((comment) => (
+                    {(post.comments || []).map((comment) => (
                       <div key={comment._id} className='flex gap-2 items-start'>
                         <div className='avatar'>
                           <div className='w-8 rounded-full'>
                             <img
-                              src={comment.user.profileImg || "/avatar-placeholder.png"}
+                              src={comment?.user?.profileImg || "/avatar-placeholder.png"}
+                              alt="user avatar"
                             />
                           </div>
                         </div>
                         <div className='flex flex-col'>
                           <div className='flex items-center gap-1'>
-                            <span className='font-bold'>{comment.user.fullName}</span>
-                            <span className='text-gray-700 text-sm'>
-                              @{comment.user.username}
-                            </span>
+                            <span className='font-bold'>{comment?.user?.fullName || "Unknown"}</span>
+                            <span className='text-gray-700 text-sm'>@{comment?.user?.username || "user"}</span>
                           </div>
                           <div className='text-sm'>{comment.text}</div>
                         </div>
