@@ -1,4 +1,5 @@
 import "./App.css";
+import Premium from "./components/common/Premium";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/auth/login/LoginPage";
 import SignUpPage from "./pages/auth/signup/SignUpPage";
@@ -31,6 +32,7 @@ function App() {
         <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
+        <Route path="/premium" element={<Premium />} />
         <Route
           path="/notifications"
           element={authUser ? <NotificationPage /> : <Navigate to="/login" />}
