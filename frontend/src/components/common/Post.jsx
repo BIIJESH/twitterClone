@@ -10,10 +10,10 @@ import { useQuery } from "@tanstack/react-query";
 const Post = ({ post }) => {
   const [comment, setComment] = useState("");
   const postOwner = post.user;
-  const { data: authUser } = useQuery({ queryKey: ["authUser"] })
+  const { data: authUser } = useQuery({ queryKey: ["auth", "me"] })
   const isLiked = false;
 
-  const isMyPost = authUser?._id === post.user_id;
+  const isMyPost = authUser._id === post.user._id;
 
   const formattedDate = "1h";
 
