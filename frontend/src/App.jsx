@@ -19,13 +19,13 @@ function App() {
       try {
         const res = await fetch("/api/auth/me")
         const data = await res.json()
+        if (data.error) return null
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong")
         }
         return data
       } catch (error) {
-        console.log(error)
-        throw Error
+        throw new Error(error)
       }
     },
     retry: 1

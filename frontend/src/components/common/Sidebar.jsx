@@ -5,25 +5,25 @@ import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
-import { Mutation, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
-  const { mutate: logout, isError, error } = useMutation({
+  const queryClient = useQueryClient()
+  const { mutate: logout } = useMutation({
     mutationFn: async () => {
       try {
         const res = await fetch("/api/auth/logout", { method: "POST" })
-        const authUser = res.json()
+        const data = await res.json()
         if (!res.ok) {
-          throw new Error(authUser.error || "Something went wrong")
+          throw new Error(data.error || "Something went wrong")
         }
       } catch (error) {
-        console.log(error)
-        throw error
+        throw new Error(error)
       }
     },
     onSuccess: () => {
-      toast.success("Logged out")
+      queryClient.invalidateQueries({ queryKey: ['authUser'] })
     },
     onError: () => {
       toast.error("Logout failed")
