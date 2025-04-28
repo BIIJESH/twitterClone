@@ -13,39 +13,71 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./components/common/LoadingSpinner";
 
 function App() {
-  const { data: authUser, isLoading } = useQuery({
-    queryKey: ['auth', 'me'],
-    retry: 1
-  })
-  if (isLoading) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <LoadingSpinner size="lg" />
-      </div>
-    )
-  }
-  return (
-    <div className="flex max-w-6xl mx-auto">
-      {/* this is a common component becaues this is out side of the routes */}
-      {authUser && <Sidebar />}
-      <Routes>
-        <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
-        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
-        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
-        <Route path="/premium" element={<Premium />} />
-        <Route
-          path="/notifications"
-          element={authUser ? <NotificationPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/profile/:username"
-          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
-        />
-      </Routes>
-      {authUser && <RightPanel />}
-      <Toaster />
-    </div>
-  );
+     const { data: authUser, isLoading } = useQuery({
+          queryKey: ["auth", "me"],
+          retry: 1,
+     });
+     if (isLoading) {
+          return (
+               <div className="h-screen flex justify-center items-center">
+                    <LoadingSpinner size="lg" />
+               </div>
+          );
+     }
+     return (
+          <div className="flex max-w-6xl mx-auto">
+               {/* this is a common component becaues this is out side of the routes */}
+               {authUser && <Sidebar />}
+               <Routes>
+                    <Route
+                         path="/"
+                         element={
+                              // change later !!
+                              !authUser ? (
+                                   <HomePage />
+                              ) : (
+                                   <Navigate to="/login" />
+                              )
+                         }
+                    />
+                    <Route
+                         path="/login"
+                         element={
+                              !authUser ? <LoginPage /> : <Navigate to="/" />
+                         }
+                    />
+                    <Route
+                         path="/signup"
+                         element={
+                              !authUser ? <SignUpPage /> : <Navigate to="/" />
+                         }
+                    />
+                    <Route path="/premium" element={<Premium />} />
+                    <Route
+                         path="/notifications"
+                         element={
+                              authUser ? (
+                                   <NotificationPage />
+                              ) : (
+                                   <Navigate to="/login" />
+                              )
+                         }
+                    />
+                    <Route
+                         path="/profile/:username"
+                         element={
+                              authUser ? (
+                                   <ProfilePage />
+                              ) : (
+                                   <Navigate to="/login" />
+                              )
+                         }
+                    />
+               </Routes>
+               {authUser && <RightPanel />}
+               <Toaster />
+          </div>
+     );
 }
 
 export default App;
