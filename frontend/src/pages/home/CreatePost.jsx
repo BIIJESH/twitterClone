@@ -11,6 +11,7 @@ const CreatePost = () => {
   const imgRef = useRef(null);
 
   const queryClient = useQueryClient();
+  const { data: authUser } = useQuery({ queryKey: ["auth", "me"] })
 
   const {
     mutate: createPost,
@@ -61,7 +62,6 @@ const CreatePost = () => {
     }
   };
 
-  const { data: authUser } = useQuery({ queryKey: ["auth", "me"] })
   return (
     <div className='flex p-4 items-start gap-4 border-b border-gray-700'>
       <div className='avatar'>
