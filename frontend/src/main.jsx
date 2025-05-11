@@ -7,27 +7,29 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "remixicon/fonts/remixicon.css";
 
 const defaultQueryFn = async ({ queryKey }) => {
-     const res = await fetch(`/api/${queryKey.join("/")}`);
-     const data = await res.json();
-     if (!res.ok) throw new Error(data.error || "Something went wrong");
-     return data;
+  const res = await fetch(`/api/${queryKey.join("/")}`, {
+    credentials: "include",
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Something went wrong");
+  return data;
 };
 
 const queryClient = new QueryClient({
-     defaultOptions: {
-          queries: {
-               queryFn: defaultQueryFn,
-               refetchOnWindowFocus: false,
-          },
-     },
+  defaultOptions: {
+    queries: {
+      queryFn: defaultQueryFn,
+      refetchOnWindowFocus: false,
+    },
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-     <React.StrictMode>
-          <BrowserRouter>
-               <QueryClientProvider client={queryClient}>
-                    <App />
-               </QueryClientProvider>
-          </BrowserRouter>
-     </React.StrictMode>
+  <React.StrictMode>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );

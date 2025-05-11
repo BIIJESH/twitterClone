@@ -17,7 +17,7 @@ import LoadingSpinner from "./components/common/LoadingSpinner";
 function App() {
   const { data: authUser, isLoading } = useQuery({
     // we use queryKey to give a unique name to our query and refer to it later
-    queryKey: ["authUser"],
+    queryKey: ["auth", "me"],
     queryFn: async () => {
       try {
         const res = await fetch("/api/auth/me");
