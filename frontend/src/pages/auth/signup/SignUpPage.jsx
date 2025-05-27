@@ -38,7 +38,7 @@ const SignUpPage = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] })
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
     }
   })//use for data manuplulation
 
