@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose";
 
 import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
@@ -26,9 +27,11 @@ export const followUnfollowUser = async (req, res) => {
         .status(400)
         .json({ error: "You can't follow unfollow yourself" });
     }
+
     if (!userToModify || !currentUser)
       return res.status(400).json({ error: "User not found" });
     const isFollowing = currentUser.following.includes(id);
+
     if (isFollowing) {
       await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
       await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
@@ -61,6 +64,7 @@ export const followUnfollowUser = async (req, res) => {
 export const getSuggestedUsers = async (req, res) => {
   try {
     const userId = req.user._id;
+
     const usersFollowedByMe = await User.findById(userId).select("following");
 
     const users = await User.aggregate([
@@ -72,6 +76,7 @@ export const getSuggestedUsers = async (req, res) => {
       { $sample: { size: 10 } },
     ]);
 
+    // 1,2,3,4,5,6,
     const filteredUsers = users.filter(
       (user) => !usersFollowedByMe.following.includes(user._id),
     );
